@@ -13,7 +13,8 @@
     <div id="chart-container">
         <canvas id="mycanvas"></canvas>
     </div>
-    <script src="library/jquery-3.3.1.min.js"></script>
+    <script src="./library/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="library/chart.min.js"></script>
     <script src="js/app.js"></script>
 </body>

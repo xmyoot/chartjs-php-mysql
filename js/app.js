@@ -1,19 +1,20 @@
 $(document).ready(function(){
     $.ajax({
-        url: "http://localhost/status/data.php",
+        url: "http://localhost/status/chartjs-php-mysql/data.php",
         method: "get",
+        dataType: "json",
         success: function(data){
             console.log(data);
             var amendBehind = [];
             var lastAck = [];
             var recordDate = [];
             for (var i in data){
-                amendBehind.push(data[i].AMEND_BEHIND);
-                lastAck.push(data[i].LAST_ACK);
+                amend = parseInt(data[i].AMEND_BEHIND)
+                amendBehind.push(amend);
+                lastAck.push(moment(data[i].LAST_ACK));
                 recordDate.push(data[i].RECORD_DATE);
             }
             amendBehind.reverse();
-            lastAck.reverse();
             recordDate.reverse();
 
             var chartdata = {
@@ -21,11 +22,12 @@ $(document).ready(function(){
                 datasets: [
                     {
                         label: "Last Acknowledged",
-                        backgroundColor: "blue",
-                        borderColor: "darkblue",
-                        hoverBackgroundColor: "gray",
-                        hoverBorderColor: "darkgray",
                         data: lastAck
+                    },
+                    {
+                        label: "Amend Behind",
+                        data: amendBehind,
+                        type: 'bar'
                     }
                 ]
             };
@@ -33,7 +35,35 @@ $(document).ready(function(){
 
             var barGraph = new Chart(ctx, {
                 type: "line",
-                data: chartdata
+                data: chartdata,
+                options: {
+                    scales: {
+                        bounds: 'data',
+                        yAxes: [{
+                            type: "time",
+                            distribution: "linear",
+                            ticks: {
+
+                            },
+                            time: {
+                                unit: 'day',
+                                displayFormat :{
+                                    quarter: '||'
+                                }
+                            },
+                            xAxes: [{
+                                type: "time",
+                                distribution: "linear",
+                                time: {
+                                    unit: 'day',
+                                    displayFormat :{
+                                        quarter: '||'
+                                    }
+                                }
+                            }]
+                        }]
+                    }
+                }
             });
         },
         error: function(data){
